@@ -1,7 +1,7 @@
 <template>
   <h2>{{customTitle}}</h2>
   <p>{{ counter }} <sup>2</sup> = {{ squareCounter }}</p>
-
+  <p data-testid="counter">{{counter}}</p>
   <div>
     <button v-on:click="increaseCounter()">+1</button>
     <button @click="decreaseCounter()">-1</button>
