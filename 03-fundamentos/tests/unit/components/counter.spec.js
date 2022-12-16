@@ -2,6 +2,14 @@ import { shallowMount } from "@vue/test-utils";
 import Counter from "@/components/Counter";
 
 describe("Counter Component", () => {
+
+  let wrapper 
+  
+  beforeEach(() => {
+    wrapper = shallowMount(Counter)
+  })
+
+
   // test("debe de hacer match con el snapshot", () => {
 
   //   const wrapper = shallowMount(Counter);
@@ -10,8 +18,7 @@ describe("Counter Component", () => {
   // });
 
   test('h2 debe tener el valor por defecto Counter', () => {
-    const wrapper = shallowMount(Counter)
-
+    
     expect(wrapper.find('h2').exists()).toBeTruthy()
 
     const h2 = wrapper.find('h2')
@@ -22,7 +29,6 @@ describe("Counter Component", () => {
 
   test('el valor por defecto debe de ser 100 en el p', () => {
     // wrapper
-    const wrapper = shallowMount(Counter)
     // pTags
     const value = wrapper.find('[data-testid="counter"]').text()
     // expect segundo p == 100
@@ -30,19 +36,32 @@ describe("Counter Component", () => {
   })
 
 
-  test('debe de incrementar en 1 el valor del contador', async () => {
+  test('debe de incrementar y decrementar el contador', async () => {
 
-    const wrapper = shallowMount(Counter)
 
-    const increseBtn = wrapper.find('button')
+    const [increseBtn, decreseBtn] = wrapper.findAll('button')
 
     await increseBtn.trigger('click')
+    await increseBtn.trigger('click')
+    await increseBtn.trigger('click')
+    await decreseBtn.trigger('click')
+    await decreseBtn.trigger('click')
+
+    const value = wrapper.find('[data-testid="counter"]').text()
+  
+    expect(value).toBe('11')
+  })
+
+
+  test('debe de establecer el valor por defecto', () => {
+    
+    const {start} = wrapper.props()
 
     const value = wrapper.find('[data-testid="counter"]').text()
 
-    expect(value).toBe('11')
+    // Se tiene que parsear el value ya que es un string
+    expect (Number(value)).toBe(start)
 
-    const decreseBtn = wrapper.find()
   })
 
 });
