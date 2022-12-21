@@ -1,104 +1,108 @@
 <template>
-    <img v-if="img" :src="img" alt="bg">
-    <div class="bg-dark"></div>
-    <div class="indecision-container">
-        <input type="text" placeholder="Hazme una pregunta" v-model="question">
-        <p>Recuerda terminar con un signo de interrogación (?)</p>
+  <img v-if="img" :src="img" alt="bg" />
+  <div class="bg-dark"></div>
+  <div class="indecision-container">
+    <input type="text" placeholder="Hazme una pregunta" v-model="question" />
+    <p>Recuerda terminar con un signo de interrogación (?)</p>
 
-        <div v-if="isValidQuestion">
-            <h2>{{question}}</h2>
-            <h1>{{ answer == 'yes' ? 'Si!' : 'No!' }}</h1>
-
-        </div>
+    <div v-if="isValidQuestion">
+      <h2>{{ question }}</h2>
+      <h1>{{ answer }}</h1>
     </div>
-
+  </div>
 </template>
 
 <script>
 export default {
-    data() {
-        return {
-            question: null,
-            answer: null,
-            img: null,
-            isValidQuestion: false
+  data() {
+    return {
+      question: null,
+      answer: null,
+      img: null,
+      isValidQuestion: false,
+    };
+  },
+  methods: {
+    async getAnswer() {
+      try {
 
-        }
+        this.answer = "Pensando...";
+        const { answer, image } = await fetch("https://yesno.wtf/api").then(
+          (r) => r.json()
+        );
+
+        // this.answer = answer == 'yes' ? 'Si!' : 'No!'
+        this.answer = answer == "yes" ? "Si!" : "No!";
+        this.img = image;
+
+      } catch (error) {
+        console.log('IndecisionComponent:', error);
+        this.answer = 'No se pudo cargar del API'
+        this.img = null
+      }
     },
-    methods: {
-        async getAnswer(){
+  },
+  watch: {
+    question(value, oldValue) {
+      this.isValidQuestion = false;
 
-            this.answer = 'Pensando...'
-            const {answer, image} = await fetch('https://yesno.wtf/api').then( r => r.json())
+      console.log({ value });
 
-            // this.answer = answer == 'yes' ? 'Si!' : 'No!'
-            this.answer = answer 
-            this.img = image
-        }
+      if (!value.includes("?")) return;
+
+      this.isValidQuestion = true;
+
+      // TODO: REALIZAR PETICION HTTP
+
+      this.getAnswer();
     },
-    watch: {
-        question(value, oldValue){
-
-            this.isValidQuestion = false
-
-            console.log({value});
-
-            if(!value.includes('?')) return 
-
-            this.isValidQuestion = true
-
-            // TODO: REALIZAR PETICION HTTP
-
-            this.getAnswer()
-        }
-        
-    }
-}
+  },
+};
 </script>
 
 <style scoped>
+img,
+.bg-dark {
+  height: 100vh;
+  left: 0px;
+  max-height: 100%;
+  max-width: 100%;
+  position: fixed;
+  top: 0px;
+  width: 100vw;
+}
 
-    img, .bg-dark {
-        height: 100vh;
-        left: 0px;
-        max-height: 100%;
-        max-width: 100%;
-        position: fixed;
-        top: 0px;
-        width: 100vw;
-    }
+.bg-dark {
+  background-color: rgba(0, 0, 0, 0.4);
+}
 
-    .bg-dark {
-        background-color: rgba(0, 0, 0, 0.4);
-    }
+.indecision-container {
+  position: relative;
+  z-index: 99;
+}
 
-    .indecision-container {
-        position: relative;
-        z-index: 99;
-    }
-    
-    input {
-        width: 250px;
-        padding: 10px 15px;
-        border-radius: 5px;
-        border: none;
-    }
-    input:focus {
-        outline: none;
-    }
+input {
+  width: 250px;
+  padding: 10px 15px;
+  border-radius: 5px;
+  border: none;
+}
+input:focus {
+  outline: none;
+}
 
-    p {
-        color: white;
-        font-size: 20px;
-        margin-top: 0px;
-    }
+p {
+  color: white;
+  font-size: 20px;
+  margin-top: 0px;
+}
 
-    h1, h2 {
-        color: white;
-    }
-    
-    h2 {
-        margin-top: 150px;
-    }
+h1,
+h2 {
+  color: white;
+}
 
+h2 {
+  margin-top: 150px;
+}
 </style>
