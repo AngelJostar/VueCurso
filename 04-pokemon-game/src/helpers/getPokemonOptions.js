@@ -17,7 +17,7 @@ const getPokemonOptions = async() => {
     // toma unicamente los primeros 4 elementos de arreglo mezclado
     const pokemons =  await getPokemonNames(mixedPokemons.splice(0,4))
 
-    console.log(pokemons);
+    return pokemons
 } 
 
 // crea un nuevo arreglo de pokemones
