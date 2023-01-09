@@ -7,12 +7,14 @@
 </template>
 
 <script>
-import Navbar from './modules/shared/components/Navbar'
+import {defineAsyncComponent} from 'vue'
+// para importarlo de manera lazyloading tambien
+// import Navbar from './modules/shared/components/Navbar'
 
 export default {
   name: 'App',
   components: {
-    Navbar
+    Navbar: defineAsyncComponent(() => import(/*webpackChunkName: "Navbar" */ '@/modules/shared/components/Navbar'))
   }
 }
 </script>
